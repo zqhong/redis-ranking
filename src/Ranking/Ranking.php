@@ -46,10 +46,22 @@ abstract class Ranking
     /**
      * 获取 TOP x 的用户（根据分数从大到小排序）
      *
+     * 当 $withScores 的值为 true 时，返回值为：
+     * [
+     *  'member1' => 'score1',
+     *  'member2' => 'score2',
+     * ]
+     *
+     * 当 $withScores 的值为 false 时，返回值为：
+     * [
+     *  'member1',
+     *  'member2'
+     * ]
      * @param integer $num
+     * @param bool $withScores
      * @return array
      */
-    public function top($num)
+    public function top($num, $withScores = true)
     {
         $num = (int)$num;
 
@@ -57,8 +69,8 @@ abstract class Ranking
             throw new \InvalidArgumentException('num param must great than zero.');
         }
 
-        return $this->redisClient->zrevrange(0, $num - 1, [
-            'withscores' => true
+        return $this->redisClient->zrevrange($this->getRankingKey(), 0, $num - 1, [
+            'withscores' => $withScores
         ]);
     }
 

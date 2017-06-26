@@ -11,7 +11,8 @@
   "require": {
     "predis/predis": "^1.1",
     "illuminate/support": "^5.4",
-    "nesbot/carbon": "^1.22"
+    "nesbot/carbon": "^1.22",
+    "phpunit/phpunit": "^6.2"
   },
   "autoload": {
     "psr-4": {
@@ -20,5 +21,10 @@
     "files": [
       "src/helper.php"
     ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Zqhong\\RedisRanking\\Test\\": "test"
+    }
   }
 }

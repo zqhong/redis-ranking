@@ -20,6 +20,48 @@ use Zqhong\RedisRanking\Ranking\YearlyRanking;
 class RankingManger
 {
     /**
+     * 总排行榜
+     *
+     * @var TotalRanking
+     */
+    public $totalRanking;
+
+    /**
+     * 日排行榜
+     *
+     * @var DailyRanking
+     */
+    public $dayRanking;
+
+    /**
+     * 周排行榜
+     *
+     * @var WeeklyRanking
+     */
+    public $weekRanking;
+
+    /**
+     * 月排行榜
+     *
+     * @var MonthlyRanking
+     */
+    public $monthlyRanking;
+
+    /**
+     * 季度排行榜
+     *
+     * @var QuarterlyRanking
+     */
+    public $quarterlyRanking;
+
+    /**
+     * 年排行榜
+     *
+     * @var YearlyRanking
+     */
+    public $yearlyRanking;
+
+    /**
      * 每次从数据源中获取的数据条数
      *
      * @var int
@@ -48,60 +90,53 @@ class RankingManger
     protected $rankingObjects;
 
     /**
-     * 总排行榜
-     *
-     * @var TotalRanking
+     * @var string[]
      */
-    protected $totalRanking;
+    protected $rankingClasses;
 
     /**
-     * 日排行榜
-     *
-     * @var DailyRanking
+     * @param Client $redisClient
+     * @return $this
      */
-    protected $dayRanking;
+    public function setRedisClient($redisClient)
+    {
+        $this->redisClient = $redisClient;
+        return $this;
+    }
 
     /**
-     * 周排行榜
-     *
-     * @var WeeklyRanking
-     */
-    protected $weekRanking;
-
-    /**
-     * 月排行榜
-     *
-     * @var MonthlyRanking
-     */
-    protected $monthlyRanking;
-
-    /**
-     * 季度排行榜
-     *
-     * @var QuarterlyRanking
-     */
-    protected $quarterlyRanking;
-
-    /**
-     * 年排行榜
-     *
-     * @var YearlyRanking
-     */
-    protected $yearlyRanking;
-
-    /**
-     * RankingManger constructor.
-     *
-     * @param string $rankingName
      * @param DataSourceInterface $dataSource
-     * @param array $rankingClasses
+     * @return $this
      */
-    public function __construct($rankingName, DataSourceInterface $dataSource, array $rankingClasses)
+    public function setDataSource($dataSource)
+    {
+        $this->dataSource = $dataSource;
+        return $this;
+    }
+
+    /**
+     * @param string $rankingName
+     * @return $this
+     */
+    public function setRankingName($rankingName)
     {
         $this->rankingName = $rankingName;
-        $this->dataSource = $dataSource;
+        return $this;
+    }
 
-        foreach ($rankingClasses as $rankingClass) {
+    /**
+     * @param array $rankingClasses
+     * @return $this
+     */
+    public function setRankingClasses($rankingClasses)
+    {
+        $this->rankingClasses = $rankingClasses;
+        return $this;
+    }
+
+    public function init()
+    {
+        foreach ($this->rankingClasses as $rankingClass) {
             if (class_exists($rankingClass)) {
                 $instance = new $rankingClass($this->rankingName, $this->redisClient);
                 $this->rankingObjects[] = $instance;
@@ -116,6 +151,9 @@ class RankingManger
                     case QuarterlyRanking::class:
                         $this->quarterlyRanking = $instance;
                         break;
+                    case TotalRanking::class:
+                        $this->totalRanking = $instance;
+                        break;
                     case WeeklyRanking::class:
                         $this->weekRanking = $instance;
                         break;
@@ -129,6 +167,8 @@ class RankingManger
         }
 
         $this->import();
+
+        return $this;
     }
 
     /**
@@ -159,8 +199,8 @@ class RankingManger
             }
         }
 
-        while(($items = $this->dataSource->get($lastId, $this->fetchNum)) != []) {
-            foreach ($this->$needInitObjects as $ranking) {
+        while (($items = $this->dataSource->get($lastId, $this->fetchNum)) != []) {
+            foreach ($needInitObjects as $ranking) {
                 /**@var Ranking $ranking */
                 $ranking->import($items);
                 $this->redisClient->set($ranking->getInitKey(), $now);
