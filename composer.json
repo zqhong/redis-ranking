@@ -1,0 +1,24 @@
+{
+  "name": "zqhong/redis-ranking",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "zqhong",
+      "email": "zqh0513@gmail.com"
+    }
+  ],
+  "require": {
+    "predis/predis": "^1.1",
+    "illuminate/support": "^5.4",
+    "nesbot/carbon": "^1.22"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zqhong\\RedisRanking\\": "src"
+    },
+    "files": [
+      "src/helper.php"
+    ]
+  }
+}
