@@ -11,7 +11,9 @@
   "require": {
     "predis/predis": "^1.1",
     "illuminate/support": "^5.4",
-    "nesbot/carbon": "^1.22",
+    "nesbot/carbon": "^1.22"
+  },
+  "require-dev": {
     "phpunit/phpunit": "^6.2"
   },
   "autoload": {
