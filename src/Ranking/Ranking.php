@@ -78,13 +78,17 @@ abstract class Ranking
      * 获取 $memberName 的排行
      *
      * @param string $memberName
-     * @return int
+     * @return int|null 如果不存在该用户的排名数据，返回 null。否则，返回具体的排名（整形）。
      */
     public function rank($memberName)
     {
         $memberRanking = $this->redisClient->zrevrank($this->getRankingKey(), $memberName);
 
-        return $memberRanking + 1;
+        if (is_null($memberRanking)) {
+            return null;
+        } else {
+            return $memberRanking + 1;
+        }
     }
 
     /**
@@ -103,11 +107,17 @@ abstract class Ranking
      * 获取 $memberName 的分数
      *
      * @param string $memberName
-     * @return integer
+     * @return integer|null 如果不存在该用户的数据，返回 null。否则，返回具体的分数。
      */
     public function score($memberName)
     {
-        return (int)$this->redisClient->zscore($this->getRankingKey(), $memberName);
+        $memberScore = $this->redisClient->zscore($this->getRankingKey(), $memberName);
+
+        if (is_null($memberScore)) {
+            return null;
+        } else {
+            return (int)$memberScore;
+        }
     }
 
     /**
