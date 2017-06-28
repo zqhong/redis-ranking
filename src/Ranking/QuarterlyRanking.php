@@ -19,7 +19,8 @@ class QuarterlyRanking extends Ranking
      */
     public function getRankingKey()
     {
-        return sprintf('%s:quarter:%s', $this->rankingName, date('Y') . date_quarter());
+        $month = date('n');
+        return sprintf('%s:quarter:%s', $this->rankingName, date('Y') . date_quarter($month));
     }
 
     /**
