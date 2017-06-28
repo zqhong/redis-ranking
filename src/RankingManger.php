@@ -209,7 +209,13 @@ class RankingManger
             $lastItem = Arr::last($items);
             $lastId = $lastItem['id'];
         }
+    }
 
-
+    /**
+     * @return Client
+     */
+    public function getRedisClient()
+    {
+        return $this->redisClient;
     }
 }
