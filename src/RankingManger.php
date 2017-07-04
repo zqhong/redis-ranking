@@ -199,16 +199,19 @@ class RankingManger
             }
         }
 
-        while (($items = $this->dataSource->get($lastId, $this->fetchNum)) != []) {
-            foreach ($needInitObjects as $ranking) {
-                /**@var Ranking $ranking */
-                $ranking->import($items);
-                $this->redisClient->set($ranking->getInitKey(), $now);
-            }
+        if (!empty($needInitObjects)) {
+            while (($items = $this->dataSource->get($lastId, $this->fetchNum)) != []) {
+                foreach ($needInitObjects as $ranking) {
+                    /**@var Ranking $ranking */
+                    $ranking->import($items);
+                    $this->redisClient->set($ranking->getInitKey(), $now);
+                }
 
-            $lastItem = Arr::last($items);
-            $lastId = $lastItem['id'];
+                $lastItem = Arr::last($items);
+                $lastId = $lastItem['id'];
+            }
         }
+
     }
 
     /**
