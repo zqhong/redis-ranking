@@ -67,10 +67,18 @@ class TotalRankingTest extends TestCase
         $this->assertEquals(null, $this->rankingManager->totalRanking->rank('user_not_found'));
     }
 
-//    public function testRankingAdd()
-//    {
-//
-//    }
+    public function testRankingAdd()
+    {
+        $memberName = 'must_not_exists_user_abc';
+
+        // 添加一个不存在的用户
+        $this->rankingManager->totalRanking->add($memberName, 1);
+        $this->assertEquals(1, $this->rankingManager->totalRanking->score($memberName));
+
+        // 用户已存在的情况下，更新用户分数
+        $this->rankingManager->totalRanking->add($memberName, 1);
+        $this->assertEquals(2, $this->rankingManager->totalRanking->score($memberName));
+    }
 
     public function testRankingScore()
     {
