@@ -1,10 +1,10 @@
 <?php
 
-namespace Zqhong\RedisRanking\Data;
+namespace Zqhong\RedisRanking\Test\Fixture;
 
 use Zqhong\RedisRanking\DataSourceInterface;
 
-class DummyDataSource implements DataSourceInterface
+class DummyTotalDataSource implements DataSourceInterface
 {
     /**
      * 获取数据源，每次返回 $fetchNum 条

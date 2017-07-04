@@ -4,9 +4,9 @@ namespace Zqhong\RedisRanking\Test;
 
 use PHPUnit\Framework\TestCase;
 use Predis\Client;
-use Zqhong\RedisRanking\Data\DummyDataSource;
 use Zqhong\RedisRanking\Ranking\TotalRanking;
 use Zqhong\RedisRanking\RankingManger;
+use Zqhong\RedisRanking\Test\Fixture\DummyTotalDataSource;
 
 class TotalRankingTest extends TestCase
 {
@@ -28,7 +28,7 @@ class TotalRankingTest extends TestCase
         ]);
 
         $this->rankingManager = (new RankingManger())
-            ->setDataSource(new DummyDataSource())
+            ->setDataSource(new DummyTotalDataSource())
             ->setRankingClasses([
                 TotalRanking::class,
             ])
