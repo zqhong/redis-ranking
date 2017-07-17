@@ -23,7 +23,7 @@ class DailyRanking extends Ranking
         $end = (new Carbon('tomorrow'))->timestamp;
         $itemCreatedAt = $item['created_at'];
 
-        return ($itemCreatedAt >= $start && $itemCreatedAt <= $end) ? false : true;
+        return ($itemCreatedAt >= $start && $itemCreatedAt < $end) ? false : true;
     }
 
     public function getRankingKey()

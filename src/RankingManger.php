@@ -31,7 +31,7 @@ class RankingManger
      *
      * @var DailyRanking
      */
-    public $dayRanking;
+    public $dailyRanking;
 
     /**
      * 周排行榜
@@ -143,7 +143,7 @@ class RankingManger
 
                 switch ($rankingClass) {
                     case DailyRanking::class:
-                        $this->dayRanking = $instance;
+                        $this->dailyRanking = $instance;
                         break;
                     case MonthlyRanking::class:
                         $this->monthlyRanking = $instance;
