@@ -2,44 +2,23 @@
 
 namespace Zqhong\RedisRanking\Test;
 
-use PHPUnit\Framework\TestCase;
-use Predis\Client;
 use Zqhong\RedisRanking\Ranking\TotalRanking;
 use Zqhong\RedisRanking\RankingManger;
 use Zqhong\RedisRanking\Test\Fixture\DummyTotalDataSource;
 
-class TotalRankingTest extends TestCase
+class TotalRankingTestCase extends RankingTestCase
 {
-    protected $redisClient;
-
-    /**
-     * @var RankingManger
-     */
-    protected $rankingManager;
-
     protected function setUp()
     {
-        $redisClient = new Client([
-            'scheme' => getenv('REDIS_SCHEME'),
-            'host' => getenv('REDIS_HOST'),
-            'port' => getenv('REDIS_PORT'),
-            'password' => getenv('REDIS_PASSWORD'),
-            'database ' => getenv('REDIS_DATABASE'),
-        ]);
-
+        parent::setUp();
         $this->rankingManager = (new RankingManger())
             ->setDataSource(new DummyTotalDataSource())
             ->setRankingClasses([
                 TotalRanking::class,
             ])
             ->setRankingName('test')
-            ->setRedisClient($redisClient)
+            ->setRedisClient($this->redisClient)
             ->init();
-    }
-
-    protected function tearDown()
-    {
-        $this->rankingManager->getRedisClient()->flushall();
     }
 
 
@@ -88,7 +67,6 @@ class TotalRankingTest extends TestCase
 
         $this->assertEquals(null, $this->rankingManager->totalRanking->score('user_not_found'));
     }
-
 
 
 }
