@@ -20,17 +20,24 @@ abstract class RankingTestCase extends TestCase
 
     protected function setUp()
     {
-        $this->redisClient = new Client([
+        $options = [
             'scheme' => getenv('REDIS_SCHEME'),
             'host' => getenv('REDIS_HOST'),
             'port' => getenv('REDIS_PORT'),
-            'password' => getenv('REDIS_PASSWORD'),
             'database ' => getenv('REDIS_DATABASE'),
-        ]);
+        ];
+
+        if (!empty(getenv('REDIS_PASSWORD'))) {
+            $options = array_merge($options, [
+                'password' => getenv('REDIS_PASSWORD'),
+            ]);
+        }
+
+        $this->redisClient = new Client($options);
     }
 
     protected function tearDown()
     {
-        $this->redisClient->flushall();
+        $this->redisClient->flushdb();
     }
 }

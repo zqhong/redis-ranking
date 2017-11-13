@@ -57,6 +57,7 @@ abstract class Ranking
      *  'member1',
      *  'member2'
      * ]
+     *
      * @param integer $num
      * @param bool $withScores
      * @return array
@@ -121,6 +122,16 @@ abstract class Ranking
     }
 
     /**
+     * 返回参与排行的人数
+     *
+     * @return int
+     */
+    public function cardinality()
+    {
+        return (int)$this->redisClient->zcard($this->getRankingKey());
+    }
+
+    /**
      * 获取初始化键值（主要用于判断该排行榜是否导入过数据）
      *
      * @return string
@@ -140,6 +151,7 @@ abstract class Ranking
 
     /**
      * 根据需要，判断是否忽略该 $item
+     *
      * @param array $item
      * @return boolean
      */

@@ -69,4 +69,16 @@ class TotalRankingTestCase extends RankingTestCase
     }
 
 
+    public function testCardinality()
+    {
+        $totalRank = $this->rankingManager->totalRanking;
+        $this->assertEquals($totalRank->cardinality(), 3);
+
+        $newMemberKey = 'user_' . uniqid();
+        $totalRank->add($newMemberKey, 1000);
+        $this->assertEquals($totalRank->cardinality(), 4);
+
+        $this->rankingManager->getRedisClient()->zrem($totalRank->getRankingKey(), $newMemberKey);
+        $this->assertEquals($totalRank->cardinality(), 3);
+    }
 }
