@@ -59,6 +59,9 @@ $rankingManager->totalRanking->score('akira');
 // 如果用户 test 不存在，则会添加该用户，分数为 1
 // 如果用户 test 已存在，该用户的分数则会在原分数基础上 + 1
 $rankingManager->totalRanking->add('test', 1);
+
+// 获取参与该排行榜的人数
+echo $rankingManager->totalRanking->cardinality();
 ```
 
 # 目前存在问题：
