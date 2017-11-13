@@ -4,7 +4,14 @@ namespace Zqhong\RedisRanking\Test;
 
 use PHPUnit\Framework\TestCase;
 use Predis\Client;
+use Zqhong\RedisRanking\Ranking\DailyRanking;
+use Zqhong\RedisRanking\Ranking\MonthlyRanking;
+use Zqhong\RedisRanking\Ranking\QuarterlyRanking;
+use Zqhong\RedisRanking\Ranking\TotalRanking;
+use Zqhong\RedisRanking\Ranking\WeeklyRanking;
+use Zqhong\RedisRanking\Ranking\YearlyRanking;
 use Zqhong\RedisRanking\RankingManger;
+use Zqhong\RedisRanking\Test\Fixture\DummyDayDataSource;
 
 abstract class RankingTestCase extends TestCase
 {
@@ -34,6 +41,20 @@ abstract class RankingTestCase extends TestCase
         }
 
         $this->redisClient = new Client($options);
+
+        $this->rankingManager = (new RankingManger())
+            ->setDataSource(new DummyDayDataSource())
+            ->setRankingClasses([
+                DailyRanking::class,
+                WeeklyRanking::class,
+                MonthlyRanking::class,
+                QuarterlyRanking::class,
+                YearlyRanking::class,
+                TotalRanking::class,
+            ])
+            ->setRankingName('test')
+            ->setRedisClient($this->redisClient)
+            ->init();
     }
 
     protected function tearDown()

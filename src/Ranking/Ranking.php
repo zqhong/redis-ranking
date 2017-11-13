@@ -150,6 +150,13 @@ abstract class Ranking
     abstract public function getRankingKey();
 
     /**
+     * 获取排行榜的过期时间，仅在大于0的时候有效
+     *
+     * @return integer
+     */
+    abstract public function getExpiredAt();
+
+    /**
      * 根据需要，判断是否忽略该 $item
      *
      * @param array $item

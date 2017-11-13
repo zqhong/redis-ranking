@@ -30,4 +30,14 @@ class WeeklyRanking extends Ranking
     {
         return sprintf('%s:week:%s', $this->rankingName, date('YW'));
     }
+
+    /**
+     * 获取排行榜的过期时间，仅在大于0的时候有效
+     *
+     * @return integer
+     */
+    public function getExpiredAt()
+    {
+        return (new Carbon('next monday'))->timestamp - 1;
+    }
 }

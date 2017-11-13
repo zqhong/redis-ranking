@@ -35,10 +35,24 @@ class DummyDayDataSource implements DataSourceInterface
     {
         if (is_null($lastId)) {
             return [
+                // 明天的数据
                 [
-                    'id' => 1,
-                    'member' => 'akira',
-                    'score' => 50,
+                    'id' => 5,
+                    'member' => 'yang',
+                    'score' => 90,
+                    'created_at' => (Carbon::tomorrow())->timestamp,
+                ],
+                // 昨天的数据
+                [
+                    'id' => 4,
+                    'member' => 'kulu',
+                    'score' => 80,
+                    'created_at' => (Carbon::yesterday())->timestamp,
+                ],
+                [
+                    'id' => 3,
+                    'member' => 'mike',
+                    'score' => 70,
                     'created_at' => (Carbon::today())->timestamp,
                 ],
                 [
@@ -48,24 +62,10 @@ class DummyDayDataSource implements DataSourceInterface
                     'created_at' => (Carbon::today())->timestamp,
                 ],
                 [
-                    'id' => 3,
-                    'member' => 'mike',
-                    'score' => 70,
+                    'id' => 1,
+                    'member' => 'akira',
+                    'score' => 50,
                     'created_at' => (Carbon::today())->timestamp,
-                ],
-                // 昨天的数据，忽略
-                [
-                    'id' => 4,
-                    'member' => 'kulu',
-                    'score' => 80,
-                    'created_at' => (Carbon::yesterday())->timestamp,
-                ],
-                // 明天的数据，忽略
-                [
-                    'id' => 5,
-                    'member' => 'yang',
-                    'score' => 90,
-                    'created_at' => (Carbon::tomorrow())->timestamp,
                 ],
             ];
         } else {

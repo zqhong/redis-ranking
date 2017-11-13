@@ -194,6 +194,11 @@ class RankingManger
 
         $needInitObjects = [];
         foreach ($this->rankingObjects as $ranking) {
+            // 设置排行榜过期时间
+            if ($ranking->getExpiredAt() > 0) {
+                $this->getRedisClient()->expireat($ranking->getRankingKey(), $ranking->getExpiredAt());
+            }
+            // 筛选出未初始化的排行榜
             if (empty($this->redisClient->get($ranking->getInitKey()))) {
                 $needInitObjects[] = $ranking;
             }

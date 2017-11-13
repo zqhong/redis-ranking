@@ -9,7 +9,8 @@ if (!function_exists('date_quarter')) {
      */
     function date_quarter($month)
     {
-        if (!is_integer($month) || $month <= 0) {
+        $month = (int)$month;
+        if ($month <= 0) {
             return null;
         }
 

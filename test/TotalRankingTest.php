@@ -2,45 +2,27 @@
 
 namespace Zqhong\RedisRanking\Test;
 
-use Zqhong\RedisRanking\Ranking\TotalRanking;
-use Zqhong\RedisRanking\RankingManger;
-use Zqhong\RedisRanking\Test\Fixture\DummyTotalDataSource;
-
 class TotalRankingTestCase extends RankingTestCase
 {
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->rankingManager = (new RankingManger())
-            ->setDataSource(new DummyTotalDataSource())
-            ->setRankingClasses([
-                TotalRanking::class,
-            ])
-            ->setRankingName('test')
-            ->setRedisClient($this->redisClient)
-            ->init();
-    }
-
-
     public function testTotalRankingTop()
     {
         $this->assertEquals([
-            'akira',
-            'jian',
+            'yang',
+            'kulu',
             'mike',
         ], $this->rankingManager->totalRanking->top(3, false));
 
         $this->assertEquals([
-            'akira' => '100',
-            'jian' => '87',
-            'mike' => '59',
+            'yang' => '90',
+            'kulu' => '80',
+            'mike' => '70',
         ], $this->rankingManager->totalRanking->top(3, true));
     }
 
     public function testTotalRankingRank()
     {
-        $this->assertEquals(1, $this->rankingManager->totalRanking->rank('akira'));
-        $this->assertEquals(2, $this->rankingManager->totalRanking->rank('jian'));
+        $this->assertEquals(1, $this->rankingManager->totalRanking->rank('yang'));
+        $this->assertEquals(2, $this->rankingManager->totalRanking->rank('kulu'));
         $this->assertEquals(3, $this->rankingManager->totalRanking->rank('mike'));
 
         $this->assertEquals(null, $this->rankingManager->totalRanking->rank('user_not_found'));
@@ -61,9 +43,9 @@ class TotalRankingTestCase extends RankingTestCase
 
     public function testRankingScore()
     {
-        $this->assertEquals(100, $this->rankingManager->totalRanking->score('akira'));
-        $this->assertEquals(87, $this->rankingManager->totalRanking->score('jian'));
-        $this->assertEquals(59, $this->rankingManager->totalRanking->score('mike'));
+        $this->assertEquals(90, $this->rankingManager->totalRanking->score('yang'));
+        $this->assertEquals(80, $this->rankingManager->totalRanking->score('kulu'));
+        $this->assertEquals(70, $this->rankingManager->totalRanking->score('mike'));
 
         $this->assertEquals(null, $this->rankingManager->totalRanking->score('user_not_found'));
     }
@@ -72,13 +54,18 @@ class TotalRankingTestCase extends RankingTestCase
     public function testCardinality()
     {
         $totalRank = $this->rankingManager->totalRanking;
-        $this->assertEquals($totalRank->cardinality(), 3);
+        $this->assertEquals($totalRank->cardinality(), 5);
 
         $newMemberKey = 'user_' . uniqid();
         $totalRank->add($newMemberKey, 1000);
-        $this->assertEquals($totalRank->cardinality(), 4);
+        $this->assertEquals($totalRank->cardinality(), 6);
 
         $this->rankingManager->getRedisClient()->zrem($totalRank->getRankingKey(), $newMemberKey);
-        $this->assertEquals($totalRank->cardinality(), 3);
+        $this->assertEquals($totalRank->cardinality(), 5);
+    }
+
+    public function testGetExpiredAt()
+    {
+        $this->assertTrue($this->rankingManager->totalRanking->getExpiredAt() <= 0);
     }
 }

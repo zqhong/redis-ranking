@@ -8,19 +8,6 @@ use Zqhong\RedisRanking\Test\Fixture\DummyDayDataSource;
 
 class DailyRankingTest extends RankingTestCase
 {
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->rankingManager = (new RankingManger())
-            ->setDataSource(new DummyDayDataSource())
-            ->setRankingClasses([
-                DailyRanking::class,
-            ])
-            ->setRankingName('test')
-            ->setRedisClient($this->redisClient)
-            ->init();
-    }
-
     public function testTop()
     {
         $this->assertEquals([
@@ -53,5 +40,12 @@ class DailyRankingTest extends RankingTestCase
         $this->assertEquals(50, $this->rankingManager->dailyRanking->score('akira'));
 
         $this->assertEquals(null, $this->rankingManager->dailyRanking->score('user_not_found'));
+    }
+
+    public function testGetExpiredAt()
+    {
+        $expiredAt = strtotime('tomorrow');
+
+        $this->assertTrue($this->rankingManager->dailyRanking->getExpiredAt() == $expiredAt);
     }
 }
